@@ -8,3 +8,16 @@
 
   <%= button_to "Destroy this group", @group, method: :delete %>
 </div>
+<h2>Contacts in this Group</h2>
+
+<% if @contacts.any? %>
+  <ul>
+    <% @contacts.each do |contact| %>
+      <li>
+        <%= contact.name %> - <%= contact.phone %> - <%= contact.email %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No contacts in this group.</p>
+<% end %>

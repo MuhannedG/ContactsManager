@@ -5,12 +5,15 @@ class GroupsController < ApplicationController
 
   # GET /groups or /groups.json
   def index
-    @groups = Group.all
+    @groups = current_user.groups
   end
+  
 
   # GET /groups/1 or /groups/1.json
   def show
+    @contacts = @group.contacts
   end
+  
 
   # GET /groups/new
   def new
@@ -23,18 +26,14 @@ class GroupsController < ApplicationController
 
   # POST /groups or /groups.json
   def create
-    @group = Group.new(group_params)
-
-    respond_to do |format|
-      if @group.save
-        format.html { redirect_to @group, notice: "Group was successfully created." }
-        format.json { render :show, status: :created, location: @group }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @group.errors, status: :unprocessable_entity }
-      end
+    @group = current_user.groups.build(group_params)
+    if @group.save
+      redirect_to groups_path, notice: "Group was successfully created."
+    else
+      render :new
     end
   end
+  
 
   # PATCH/PUT /groups/1 or /groups/1.json
   def update

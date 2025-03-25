@@ -26,6 +26,12 @@
     <%= form.text_field :email %>
   </div>
 
+
+  <div class="field">
+    <%= form.label :group_ids, "Groups" %><br>
+    <%= form.collection_select :group_ids, current_user.groups, :id, :name, {}, { multiple: true } %>
+  </div>
+
   <div>
     <%= form.submit %>
   </div>
