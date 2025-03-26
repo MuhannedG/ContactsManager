@@ -15,8 +15,9 @@ jobs:
       # Secondary container: PostgreSQL
       - image: cimg/postgres:14.5
         environment:
-          POSTGRES_USER: root
-          POSTGRES_DB: my_app_test
+          POSTGRES_USER: postgres
+          POSTGRES_DB: Hamada1985@
+          POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
       - run:
