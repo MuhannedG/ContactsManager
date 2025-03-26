@@ -16,21 +16,26 @@ jobs:
       - image: cimg/postgres:14.5
         environment:
           POSTGRES_USER: postgres
-          POSTGRES_DB: Hamada1985@
-          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_PASSWORD: Hamada1985@
+          POSTGRES_DB: contacts_manager_test
     steps:
       - checkout
+
       - run:
           name: Install Bundler
           command: gem install bundler
+
       - run:
           name: Bundle Install
           command: bundle install --path vendor/bundle
+
       - run:
           name: Database Setup
           command: |
+            # Create and migrate the test database
             bundle exec rails db:create
             bundle exec rails db:migrate
+
       - run:
           name: Run Tests
           command: bundle exec rails test
