@@ -6,8 +6,9 @@
 #
 one:
   email: user1@example.com
-  password_digest: <%= User.digest("password") %>
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
 
 two:
   email: user2@example.com
-  password_digest: <%= User.digest("password") %>
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
+
