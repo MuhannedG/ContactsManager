@@ -1,16 +1,35 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Groups" %>
 
 <h1>Groups</h1>
 
-<div id="groups">
-  <% @groups.each do |group| %>
-    <%= render group %>
-    <p>
-      <%= link_to "Show this group", group %>
-    </p>
-  <% end %>
-</div>
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center;">
+  <thead style="background-color: #f5f5f5;">
+    <tr>
+      <th style="border: 1px solid #ddd; padding: 12px;">#</th>
+      <th style="border: 1px solid #ddd; padding: 12px;">Name</th>
+      <th style="border: 1px solid #ddd; padding: 12px;">Description</th>
+      <th style="border: 1px solid #ddd; padding: 12px;">Contacts Count</th>
+      <th style="border: 1px solid #ddd; padding: 12px;">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @groups.each_with_index do |group, index| %>
+      <tr>
+        <td style="border: 1px solid #eee; padding: 12px;"><%= index + 1 %></td>
+        <td style="border: 1px solid #eee; padding: 12px;"><%= group.name %></td>
+        <td style="border: 1px solid #eee; padding: 12px;"><%= group.description %></td>
+        <td style="border: 1px solid #eee; padding: 12px;"><%= group.contacts.count %></td>
+        <td style="border: 1px solid #eee; padding: 12px;">
+          <%= link_to 'Show', group_path(group), style: "background: #0d6efd; color: white; padding: 6px 10px; border-radius: 4px; text-decoration: none; margin-right: 5px;" %>
+          <%= link_to 'Edit', edit_group_path(group), style: "background: #198754; color: white; padding: 6px 10px; border-radius: 4px; text-decoration: none; margin-right: 5px;" %>
+          <%= button_to 'Delete', group_path(group), method: :delete, data: { confirm: 'Are you sure?' },
+              form_class: "inline-form", style: "background: #dc3545; color: white; padding: 6px 10px; border: none; border-radius: 4px;" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
-<%= link_to "New group", new_group_path %>
+<div style="text-align: right; margin-top: 20px;">
+  <%= link_to 'New Group', new_group_path, style: "background: #0d6efd; color: white; padding: 10px 16px; border-radius: 5px; text-decoration: none;" %>
+</div>

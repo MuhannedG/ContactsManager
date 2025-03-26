@@ -1,11 +1,35 @@
-<% content_for :title, "New contact" %>
+<%= form_with(model: @contact, local: true) do |form| %>
+  <% if @contact.errors.any? %>
+    <div style="color: red;">
+      <h2><%= pluralize(@contact.errors.count, "error") %> prohibited this contact from being saved:</h2>
+      <ul>
+        <% @contact.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-<h1>New contact</h1>
+  <div style="margin-bottom: 10px;">
+    <%= form.label :name %><br>
+    <%= form.text_field :name %>
+  </div>
 
-<%= render "form", contact: @contact %>
+  <div style="margin-bottom: 10px;">
+    <%= form.label :phone %><br>
+    <%= form.text_field :phone %>
+  </div>
 
-<br>
+  <div style="margin-bottom: 10px;">
+    <%= form.label :email %><br>
+    <%= form.email_field :email %>
+  </div>
 
-<div>
-  <%= link_to "Back to contacts", contacts_path %>
-</div>
+  <div style="margin-bottom: 10px;">
+    <%= form.label :group_ids, "Groups" %><br>
+    <%= form.collection_select :group_ids, current_user.groups, :id, :name, {}, { multiple: true } %>
+  </div>
+
+  <%= form.submit(@contact.new_record? ? "Create Contact" : "Update Contact", style: "background: #0d6efd; color: white; padding: 8px 12px; border: none; cursor: pointer;") %>
+  <%= link_to "Back to Contacts", contacts_path, style: "background: #6c757d; color: white; padding: 8px 12px; text-decoration: none; margin-left: 10px;" %>
+<% end %>

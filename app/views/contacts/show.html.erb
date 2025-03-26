@@ -1,10 +1,28 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Contact Details" %>
 
-<%= render @contact %>
+<h1>Contact Details</h1>
 
-<div>
-  <%= link_to "Edit this contact", edit_contact_path(@contact) %> |
-  <%= link_to "Back to contacts", contacts_path %>
+<table style="width: 60%; margin: auto; border-collapse: collapse; text-align: center;" border="1" cellpadding="8">
+  <tr>
+    <th>Name</th>
+    <td><%= @contact.name %></td>
+  </tr>
+  <tr>
+    <th>Phone</th>
+    <td><%= @contact.phone %></td>
+  </tr>
+  <tr>
+    <th>Email</th>
+    <td><%= @contact.email %></td>
+  </tr>
+  <tr>
+    <th>Groups</th>
+    <td><%= @contact.groups.map(&:name).join(", ") %></td>
+  </tr>
+</table>
 
-  <%= button_to "Destroy this contact", @contact, method: :delete %>
+<div style="margin-top: 20px; text-align: center;">
+  <%= link_to "Edit", edit_contact_path(@contact), class: "btn", style: "background-color: #198754;" %>
+  <%= button_to "Delete", contact_path(@contact), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger", form_class: "inline-form" %>
+  <%= link_to "Back", contacts_path, class: "btn", style: "background-color: gray;" %>
 </div>

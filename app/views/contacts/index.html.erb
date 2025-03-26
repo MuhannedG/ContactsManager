@@ -1,16 +1,82 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Contacts" %>
 
 <h1>Contacts</h1>
 
-<div id="contacts">
-  <% @contacts.each do |contact| %>
-    <%= render contact %>
-    <p>
-      <%= link_to "Show this contact", contact %>
-    </p>
-  <% end %>
-</div>
+<p style="color: green"><%= notice %></p>
 
-<%= link_to "New contact", new_contact_path %>
+<!-- Filter and Search Form -->
+<%= form_with url: contacts_path, method: :get, local: true do %>
+  <label>Filter by Group:</label>
+  <%= select_tag :group_id,
+        options_from_collection_for_select(@groups, :id, :name, @selected_group_id),
+        include_blank: "All Groups" %>
+
+  <label style="margin-left: 15px;">Search:</label>
+  <%= text_field_tag :search, @search_term %>
+
+  <%= submit_tag "Apply", style: "margin-left: 10px" %>
+<% end %>
+
+<!-- Contact Table -->
+<table border="1" cellpadding="8" cellspacing="0" style="margin-top: 15px; border-collapse: collapse; width: 100%; text-align: center;">
+  <thead style="background-color: #f0f0f0;">
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Phone</th>
+      <th>Email</th>
+      <th>Groups</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @contacts.each_with_index do |contact, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= contact.name %></td>
+        <td><%= contact.phone %></td>
+        <td><%= contact.email %></td>
+        <td><%= contact.groups.map(&:name).join(", ") %></td>
+        <td>
+          <%= link_to "Show", contact, class: "btn" %>
+          <%= link_to "Edit", edit_contact_path(contact), class: "btn", style: "background-color: #198754;" %>
+          <%= button_to "Delete", contact, method: :delete, data: { confirm: "Are you sure?" }, form_class: "inline-form", class: "btn btn-danger", style: "margin-top: 4px;" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p style="margin-top: 20px;">
+  <%= link_to "New contact", new_contact_path, class: "btn" %>
+</p>
+
+<!-- Button Styles -->
+<style>
+  .btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 2px;
+    text-decoration: none;
+    background-color: #0d6efd;
+    color: white;
+    border-radius: 4px;
+  }
+
+  .btn:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .btn-danger:hover {
+    background-color: #a71d2a;
+  }
+
+  .inline-form {
+    display: inline;
+  }
+</style>

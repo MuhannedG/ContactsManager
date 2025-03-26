@@ -1,11 +1,25 @@
-<% content_for :title, "New group" %>
+<%= form_with(model: @group, local: true) do |form| %>
+  <% if @group.errors.any? %>
+    <div style="color: red;">
+      <h2><%= pluralize(@group.errors.count, "error") %> prohibited this group from being saved:</h2>
+      <ul>
+        <% @group.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-<h1>New group</h1>
+  <div style="margin-bottom: 10px;">
+    <%= form.label :name %><br>
+    <%= form.text_field :name %>
+  </div>
 
-<%= render "form", group: @group %>
+  <div style="margin-bottom: 10px;">
+    <%= form.label :description %><br>
+    <%= form.text_area :description %>
+  </div>
 
-<br>
-
-<div>
-  <%= link_to "Back to groups", groups_path %>
-</div>
+  <%= form.submit(@group.new_record? ? "Create Group" : "Update Group", style: "background: #0d6efd; color: white; padding: 8px 12px; border: none; cursor: pointer;") %>
+  <%= link_to "Back to Groups", groups_path, style: "background: #6c757d; color: white; padding: 8px 12px; text-decoration: none; margin-left: 10px;" %>
+<% end %>

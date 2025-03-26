@@ -4,36 +4,101 @@
     <title><%= content_for(:title) || "Contacts Manager" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
-    <%= yield :head %>
 
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
+
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
 
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 30px;
+        background-color: #fdfdfd;
+        color: #222;
+      }
+
+      nav {
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+
+      nav a {
+        margin-right: 10px;
+        text-decoration: none;
+        color: #0056b3;
+      }
+
+      .flash {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        background-color: #e7f3fe;
+        color: #0c5460;
+      }
+
+      .flash.alert {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+      .btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 4px;
+    text-decoration: none;
+    background-color: #0d6efd;
+    color: white;
+    border-radius: 4px;
+  }
+
+  .btn:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+  }
+
+  .btn-danger:hover {
+    background-color: #a71d2a;
+  }
+
+  .inline-form {
+    display: inline;
+  }
+    </style>
   </head>
 
   <body>
-  <% if user_signed_in? %>
-  <p>Welcome, <%= current_user.first_name %>!</p>
-  <%= link_to "Contacts", contacts_path %> |
-  <%= link_to "Groups", groups_path %> |
-  
-  <% else %>
-  <%= link_to "Login", new_user_session_path %> |
-  <%= link_to "Sign Up", new_user_registration_path %>
-<% end %>
+    <% flash.each do |key, message| %>
+      <div class="flash <%= key == 'alert' ? 'alert' : '' %>">
+        <%= message %>
+      </div>
+    <% end %>
 
+    <nav>
+      <% if user_signed_in? %>
+        <strong>Welcome, <%= current_user.first_name %>!</strong>
+        <%= link_to "Contacts", contacts_path %> |
+        <%= link_to "Groups", groups_path %> |
+        
+      <% else %>
+        <%= link_to "Login", new_user_session_path %> |
+        <%= link_to "Sign Up", new_user_registration_path %>
+      <% end %>
+    </nav>
 
     <%= yield %>
-    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+
+    
 
   </body>
+  
 </html>
