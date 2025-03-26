@@ -28,11 +28,12 @@ class GroupsController < ApplicationController
   def create
     @group = current_user.groups.build(group_params)
     if @group.save
-      redirect_to groups_path, notice: "Group was successfully created."
+      redirect_to group_url(@group), notice: "Group was successfully created."
     else
       render :new
     end
   end
+  
   
 
   # PATCH/PUT /groups/1 or /groups/1.json

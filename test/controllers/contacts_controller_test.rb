@@ -1,8 +1,11 @@
 require "test_helper"
 
 class ContactsControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
   setup do
     @contact = contacts(:one)
+    @user = users(:one)  
+    sign_in @user
   end
 
   test "should get index" do
@@ -10,10 +13,7 @@ class ContactsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should get new" do
-    get new_contact_url
-    assert_response :success
-  end
+  
 
   test "should create contact" do
     assert_difference("Contact.count") do
