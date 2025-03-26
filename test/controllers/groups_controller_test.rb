@@ -1,7 +1,11 @@
 require "test_helper"
 
 class GroupsControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers  # Include Devise helpers
+
   setup do
+    @user = users(:one)
+    sign_in @user
     @group = groups(:one)
   end
 
