@@ -6,7 +6,6 @@ class ContactsController < ApplicationController
     @groups = current_user.groups
     @selected_group_id = params[:group_id]
     @search_term = params[:search]
-
     @contacts = current_user.contacts
 
     if @selected_group_id.present?
@@ -31,9 +30,10 @@ class ContactsController < ApplicationController
   def create
     @contact = current_user.contacts.build(contact_params)
     if @contact.save
-      redirect_to contacts_path, notice: "Contact was successfully created."
+      # Changed to redirect to the newly created contact's show page
+      redirect_to @contact, notice: "Contact was successfully created."
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
