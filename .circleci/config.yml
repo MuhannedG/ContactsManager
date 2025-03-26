@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  ruby: circleci/ruby@1.2.2
-
 workflows:
   build_test_deploy:
     jobs:
@@ -14,7 +11,7 @@ workflows:
 jobs:
   build_and_test:
     docker:
-      # Primary container: includes Ruby and browsers (Chrome/Firefox) for system tests
+      # Primary container: Ruby + browsers for system tests
       - image: cimg/ruby:3.1-browsers
         environment:
           RAILS_ENV: test
@@ -25,39 +22,17 @@ jobs:
           POSTGRES_DB: my_app_test
     steps:
       - checkout
-
       - run:
           name: Install Bundler
           command: gem install bundler
-
       - run:
           name: Bundle Install
           command: bundle install --path vendor/bundle
-
       - run:
           name: Database Setup
           command: |
-            # Create and migrate the test database
             bundle exec rails db:create
             bundle exec rails db:migrate
-
       - run:
           name: Run Tests
-          command: |
-            # This will run all tests, including system tests if any
-            bundle exec rails test
-
-  deploy:
-    docker:
-      # For deployment, you may not need the browsers variant.
-      # Use a smaller image like cimg/ruby:3.1-node, or whichever best fits your deploy steps.
-      - image: cimg/ruby:3.1-node
-    steps:
-      - checkout
-
-      - run:
-          name: Deploy
-          command: |
-            # Make sure your deploy.sh script is executable
-            chmod +x deploy.sh
-            ./deploy.sh
+          command: bundle exec rails test
