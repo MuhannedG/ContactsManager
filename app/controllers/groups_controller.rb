@@ -25,20 +25,11 @@ class GroupsController < ApplicationController
   def create
     @group = current_user.groups.build(group_params)
     if @group.save
-<<<<<<< HEAD
-      redirect_to group_url(@group), notice: "Group was successfully created."
-=======
       redirect_to @group, notice: "Group was successfully created."
->>>>>>> 12af641c8ec44d3968c9ae7c82c1eeffd146838a
     else
       render :new, status: :unprocessable_entity
     end
   end
-<<<<<<< HEAD
-  
-  
-=======
->>>>>>> 12af641c8ec44d3968c9ae7c82c1eeffd146838a
 
   # PATCH/PUT /groups/1
   def update

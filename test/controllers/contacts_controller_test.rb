@@ -2,15 +2,11 @@ require "test_helper"
 
 class ContactsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
-<<<<<<< HEAD
-=======
-
->>>>>>> 12af641c8ec44d3968c9ae7c82c1eeffd146838a
   setup do
     @user = users(:one)
     sign_in @user
     @contact = contacts(:one)
-    @user = users(:one)  
+    @user = users(:one)
     sign_in @user
   end
 
@@ -19,7 +15,7 @@ class ContactsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  
+
 
   test "should create contact" do
     assert_difference("Contact.count") do

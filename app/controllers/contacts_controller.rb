@@ -4,13 +4,9 @@ class ContactsController < ApplicationController
 
   # GET /contacts or /contacts.json
   def index
-<<<<<<< HEAD
-    # Get the contacts for the current user
-=======
     @groups = current_user.groups
     @selected_group_id = params[:group_id]
     @search_term = params[:search]
->>>>>>> 12af641c8ec44d3968c9ae7c82c1eeffd146838a
     @contacts = current_user.contacts
     # Get the groups for the current user
     @groups = current_user.groups # This will set @groups to the user's groups
@@ -34,12 +30,8 @@ class ContactsController < ApplicationController
     @contact = current_user.contacts.build(contact_params)
 
     if @contact.save
-<<<<<<< HEAD
-      redirect_to @contact, notice: 'Contact was successfully created.'
-=======
       # Changed to redirect to the newly created contact's show page
       redirect_to @contact, notice: "Contact was successfully created."
->>>>>>> 12af641c8ec44d3968c9ae7c82c1eeffd146838a
     else
       render :new, status: :unprocessable_entity
     end
