@@ -1,18 +1,6 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-<<<<<<< HEAD
-  name: MyString
-  phone: MyString
-  email: MyString
-  user: one
-
-two:
-  name: MyString
-  phone: MyString
-  email: MyString
-  user: one
-=======
   name: John Doe
   phone: 555-1234
   email: john.doe@example.com
@@ -21,4 +9,3 @@ two:
   name: Jane Smith
   phone: 555-5678
   email: jane.smith@example.com
->>>>>>> 12af641c8ec44d3968c9ae7c82c1eeffd146838a
