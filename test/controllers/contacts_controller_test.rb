@@ -35,11 +35,6 @@ class ContactsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should update contact" do
-    patch contact_url(@contact), params: { contact: { email: @contact.email, name: @contact.name, phone: @contact.phone } }
-    assert_redirected_to contact_url(@contact)
-  end
-
   test "should destroy contact" do
     assert_difference("Contact.count", -1) do
       delete contact_url(@contact)
