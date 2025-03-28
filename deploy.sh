@@ -1,9 +1,8 @@
 #!/bin/bash
 set -e  # Exit immediately if a command exits with a non-zero status
-set -x  # Print each command as it's executed (for debugging)
 
-# Ensure /usr/local/bin is in PATH
-export PATH="/usr/local/bin:$PATH"
+# Ensure the user gem bin directory and /usr/local/bin are in PATH
+export PATH="/home/ubuntu/.local/share/gem/ruby/3.2.0/bin:/usr/local/bin:$PATH"
 
 # Dynamically locate Bundler in the PATH
 BUNDLE_CMD=$(which bundle)
@@ -35,3 +34,4 @@ echo "Restarting the application service..."
 sudo systemctl restart "ContactsManager"
 
 echo "Deployment complete!"
+
