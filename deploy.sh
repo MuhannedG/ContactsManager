@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Ensure /usr/local/bin is in PATH
+export PATH="/usr/local/bin:$PATH"
+
 echo "Starting deployment on EC2 instance..."
 
 # Navigate to the application directory
