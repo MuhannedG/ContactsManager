@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e  # Exit immediately if a command exits with a non-zero status
 
 # Ensure the user gem bin directory and /usr/local/bin are in PATH
 export PATH="/home/ubuntu/.local/share/gem/ruby/3.2.0/bin:/usr/local/bin:$PATH"
