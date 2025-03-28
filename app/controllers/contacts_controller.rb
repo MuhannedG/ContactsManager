@@ -8,8 +8,8 @@ class ContactsController < ApplicationController
     @selected_group_id = params[:group_id]
     @search_term = params[:search]
     @contacts = current_user.contacts
-    # Get the groups for the current user
-    @groups = current_user.groups # This will set @groups to the user's groups
+   
+    
   end
 
   # GET /contacts/1 or /contacts/1.json
