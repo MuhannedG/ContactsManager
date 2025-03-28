@@ -1,51 +1,44 @@
-#!/bin/bash
-set -e
-set -o errtrace
-trap 'echo "Error on line $LINENO: $BASH_COMMAND" && exit 1' ERR
-
-echo "=== Installing latest Ruby ==="
+#!/usr/bin/env bash
 # Update package lists and install prerequisites
-sudo apt-get update
-sudo apt-get install -y software-properties-common
+sudo apt update && sudo apt install -y curl gnupg2 build-essential
 
-# Add the Brightbox Ruby repository for newer Ruby versions
-sudo apt-add-repository -y ppa:brightbox/ruby-ng
-sudo apt-get update
+# Install RVM (if not already installed), latest Ruby, and Bundler
+if ! command -v ruby >/dev/null 2>&1; then
+  echo "Ruby not found. Installing RVM and the latest Ruby..."
+  # Install RVM (single-user install)
+  curl -sSL https://get.rvm.io | bash -s stable
+  # Load RVM into the current session
+  source "$HOME/.rvm/scripts/rvm"
+  # Install the latest Ruby and set it as default
+  rvm install ruby --latest
+  rvm use ruby --default
+else
+  echo "Ruby is installed: $(ruby -v)"
+fi
 
-# Install Ruby 3.2 and development tools
-sudo apt-get install -y ruby3.2 ruby3.2-dev build-essential
+if ! command -v bundle >/dev/null 2>&1; then
+  echo "Bundler not found. Installing Bundler..."
+  gem install bundler
+else
+  echo "Bundler is installed: $(bundle -v)"
+fi
 
-# Set the system default Ruby to Ruby 3.2
-sudo update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby3.2 50
-sudo update-alternatives --set ruby /usr/bin/ruby3.2
+# Stop any running instance of the Rails application service (adjust service name)
+sudo systemctl stop ContactsManager
 
-echo "Ruby version: $(ruby -v)"
+# Change directory into the folder where the application is downloaded
+cd ContactsManager/ || { echo "Error: ContactsManager directory not found"; exit 1; }
 
-echo "=== Installing latest Bundler ==="
-# Install the latest Bundler using the gem command from Ruby 3.2
-sudo gem install bundler
-
-echo "Bundler version: $(bundle -v)"
-
-echo "=== Starting deployment on EC2 instance ==="
-
-# Change into the application directory
-cd ContactsManager || { echo "Error: ContactsManager directory not found"; exit 1; }
-
-# Install production dependencies
-echo "Installing dependencies..."
+# Install application dependencies
 bundle install --deployment --without development test
 
 # Run database migrations
-echo "Migrating database..."
 bundle exec rails db:migrate RAILS_ENV=production
 
 # Precompile assets
-echo "Precompiling assets..."
 bundle exec rails assets:precompile RAILS_ENV=production
 
-# Restart the application service
-echo "Restarting the application service..."
-sudo systemctl restart ContactsManager
+# Start the application service
+sudo systemctl start ContactsManager
 
 echo "Deployment complete!"
