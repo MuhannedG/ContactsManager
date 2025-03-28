@@ -3,26 +3,33 @@ set -e
 set -o errtrace
 trap 'echo "Error on line $LINENO: $BASH_COMMAND" && exit 1' ERR
 
-echo "=== Checking for Ruby installation ==="
-if ! command -v ruby >/dev/null 2>&1; then
-  echo "Ruby not found. Installing Ruby..."
-  sudo apt-get update
-  sudo apt-get install -y ruby-full build-essential
-else
-  echo "Ruby is installed: $(ruby -v)"
-fi
+echo "=== Installing latest Ruby ==="
+# Update package lists and install prerequisites
+sudo apt-get update
+sudo apt-get install -y software-properties-common
 
-echo "=== Checking for Bundler installation ==="
-if ! command -v bundle >/dev/null 2>&1; then
-  echo "Bundler not found. Installing Bundler..."
-  sudo gem install bundler
-else
-  echo "Bundler is installed: $(bundle -v)"
-fi
+# Add the Brightbox Ruby repository for newer Ruby versions
+sudo apt-add-repository -y ppa:brightbox/ruby-ng
+sudo apt-get update
+
+# Install Ruby 3.2 and development tools
+sudo apt-get install -y ruby3.2 ruby3.2-dev build-essential
+
+# Set the system default Ruby to Ruby 3.2
+sudo update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby3.2 50
+sudo update-alternatives --set ruby /usr/bin/ruby3.2
+
+echo "Ruby version: $(ruby -v)"
+
+echo "=== Installing latest Bundler ==="
+# Install the latest Bundler using the gem command from Ruby 3.2
+sudo gem install bundler
+
+echo "Bundler version: $(bundle -v)"
 
 echo "=== Starting deployment on EC2 instance ==="
 
-# Change to the application directory
+# Change into the application directory
 cd ContactsManager || { echo "Error: ContactsManager directory not found"; exit 1; }
 
 # Install production dependencies
