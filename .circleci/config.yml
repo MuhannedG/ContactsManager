@@ -60,4 +60,4 @@ jobs:
       - checkout
       - run:
           name: Deploy Application
-          command: ssh -o StrictHostKeyChecking=no $EC2_Connect@$EC2_PUBLIC_DNS rm -rf ContactsManager/; git clone https://github.com/MuhannedG/ContactsManager.git; source ContactsManager/deploy.sh
+          command: ssh -o StrictHostKeyChecking=no $EC2_Connect@$EC2_Public_DNS rm -rf ContactsManager/; git clone https://github.com/MuhannedG/ContactsManager.git; source ContactsManager/deploy.sh
