@@ -4,9 +4,14 @@ set -e  # Exit immediately if a command exits with a non-zero status
 # Ensure /usr/local/bin is in PATH
 export PATH="/usr/local/bin:$PATH"
 
-# Define the absolute path for Bundler
-BUNDLE_CMD="/usr/local/bin/bundle"
+# Dynamically locate Bundler in the PATH
+BUNDLE_CMD=$(which bundle)
+if [ -z "$BUNDLE_CMD" ]; then
+  echo "Error: Bundler not found in PATH. Please install Bundler."
+  exit 1
+fi
 
+echo "Using Bundler from: $BUNDLE_CMD"
 echo "Starting deployment on EC2 instance..."
 
 # Navigate to the application directory
@@ -29,3 +34,4 @@ echo "Restarting the application service..."
 sudo systemctl restart "ContactsManager"
 
 echo "Deployment complete!"
+
