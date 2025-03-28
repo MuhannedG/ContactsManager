@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e  # Exit immediately if a command exits with a non-zero status
+set -x  # Print each command as it's executed (for debugging)
 
 # Ensure /usr/local/bin is in PATH
 export PATH="/usr/local/bin:$PATH"
@@ -15,7 +16,7 @@ echo "Using Bundler from: $BUNDLE_CMD"
 echo "Starting deployment on EC2 instance..."
 
 # Navigate to the application directory
-cd ContactsManager
+cd ContactsManager || { echo "Error: ContactsManager directory not found"; exit 1; }
 
 # Install production dependencies
 echo "Installing dependencies..."
@@ -34,4 +35,3 @@ echo "Restarting the application service..."
 sudo systemctl restart "ContactsManager"
 
 echo "Deployment complete!"
-
