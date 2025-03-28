@@ -9,7 +9,7 @@ cd ContactsManager
 echo "Installing dependencies..."
 bundle install --deployment --without development test
 
-# Run database migrations
+# Running database migrations
 echo "Migrating database..."
 bundle exec rails db:migrate RAILS_ENV=production
 
