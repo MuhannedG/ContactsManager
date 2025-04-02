@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
 
+# Debug: Show the HOME variable
+echo "HOME is set to: $HOME"
+
+# Optionally force the correct HOME (if you know it should be /home/ubuntu)
+export HOME=/home/ubuntu
+
 # Update package lists and install prerequisites
 sudo apt update && sudo apt install -y curl build-essential
 
 # Source RVM to ensure Ruby and gem commands are available
-source "$HOME/.rvm/scripts/rvm"
+source "$HOME/.rvm/scripts/rvm" || { echo "RVM not found in $HOME/.rvm/scripts/rvm"; exit 1; }
 
 # Verify Bundler is installed, if not, install it
 if ! command -v bundle >/dev/null 2>&1; then
@@ -15,7 +21,6 @@ else
 fi
 
 # Stop the running instance of ContactsManager service (adjust for your init system)
-# If using systemd and systemd isn't available, skip or adjust this command.
 if command -v systemctl >/dev/null 2>&1; then
   sudo systemctl stop ContactsManager || echo "ContactsManager service not running, continuing..."
 else
@@ -42,3 +47,4 @@ else
 fi
 
 echo "Deployment complete!"
+
