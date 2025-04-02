@@ -1,16 +1,14 @@
 #!/usr/bin/env bash
 
-# Debug: Show the HOME variable before forcing it
-echo "Original HOME is set to: $HOME"
-
-# Force HOME to /home/ubuntu
-export HOME=/home/ubuntu
-echo "Forced HOME is set to: $HOME"
+# (No forced HOME needed if you're already ubuntu)
+echo "Running as: $(whoami)"
+echo "HOME is: $HOME"
+echo "PATH is: $PATH"
 
 # Update package lists and install prerequisites
 sudo apt update && sudo apt install -y curl build-essential
 
-# Source RVM to ensure Ruby and gem commands are available
+# Source RVM from the correct location
 if [ -s "$HOME/.rvm/scripts/rvm" ]; then
   source "$HOME/.rvm/scripts/rvm"
 else
@@ -26,11 +24,11 @@ else
   echo "Bundler is installed: $(bundle -v)"
 fi
 
-# Stop the running instance of ContactsManager service (adjust for your init system)
+# Stop the running instance of ContactsManager service
 if command -v systemctl >/dev/null 2>&1; then
   sudo systemctl stop ContactsManager || echo "ContactsManager service not running, continuing..."
 else
-  echo "systemctl not found, please stop the ContactsManager process manually if required."
+  echo "systemctl not found. Please stop the ContactsManager process manually if required."
 fi
 
 # Change directory into the folder where the application is located
@@ -45,7 +43,7 @@ bundle exec rails db:migrate RAILS_ENV=production
 # Precompile Rails assets
 bundle exec rails assets:precompile RAILS_ENV=production
 
-# Start the Rails application service (adjust for your environment)
+# Start the Rails application service
 if command -v systemctl >/dev/null 2>&1; then
   sudo systemctl start ContactsManager
 else
