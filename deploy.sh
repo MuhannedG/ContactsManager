@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# (No forced HOME needed if you're already ubuntu)
 echo "Running as: $(whoami)"
 echo "HOME is: $HOME"
 echo "PATH is: $PATH"
@@ -8,11 +7,11 @@ echo "PATH is: $PATH"
 # Update package lists and install prerequisites
 sudo apt update && sudo apt install -y curl build-essential
 
-# Source RVM from the correct location
+# Source RVM (should be installed in /home/circleci if you set it up in CI)
 if [ -s "$HOME/.rvm/scripts/rvm" ]; then
   source "$HOME/.rvm/scripts/rvm"
 else
-  echo "Error: RVM not found in $HOME/.rvm/scripts/rvm"
+  echo "Error: RVM not found in $HOME/.rvm/scripts/rvm. Please install RVM for this user."
   exit 1
 fi
 
