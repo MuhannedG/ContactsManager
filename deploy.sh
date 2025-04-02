@@ -4,18 +4,18 @@ echo "Running as: $(whoami)"
 echo "HOME is: $HOME"
 echo "PATH is: $PATH"
 
-# Update package lists and install prerequisites
+# Update system packages
 sudo apt update && sudo apt install -y curl build-essential
 
-# Source RVM (should be installed in /home/circleci if you set it up in CI)
+# Source RVM
 if [ -s "$HOME/.rvm/scripts/rvm" ]; then
   source "$HOME/.rvm/scripts/rvm"
 else
-  echo "Error: RVM not found in $HOME/.rvm/scripts/rvm. Please install RVM for this user."
+  echo "Error: RVM not found in $HOME/.rvm/scripts/rvm"
   exit 1
 fi
 
-# Verify Bundler is installed, if not, install it
+# Verify Bundler is installed; install if missing
 if ! command -v bundle >/dev/null 2>&1; then
   echo "Bundler not found. Installing Bundler..."
   gem install bundler
@@ -23,30 +23,24 @@ else
   echo "Bundler is installed: $(bundle -v)"
 fi
 
-# Stop the running instance of ContactsManager service
+# Stop the Rails service if running (using systemd)
 if command -v systemctl >/dev/null 2>&1; then
-  sudo systemctl stop ContactsManager || echo "ContactsManager service not running, continuing..."
-else
-  echo "systemctl not found. Please stop the ContactsManager process manually if required."
+  sudo systemctl stop contacts_manager || echo "Service not running, continuing..."
 fi
 
-# Change directory into the folder where the application is located
-cd ContactsManager/ || { echo "Error: ContactsManager directory not found"; exit 1; }
+# Change directory to the application folder
+cd /home/ubuntu/ContactsManager || { echo "ContactsManager directory not found"; exit 1; }
 
-# Install application dependencies using Bundler
+# Install dependencies, run migrations, and precompile assets
 bundle install --deployment --without development test
-
-# Run database migrations
 bundle exec rails db:migrate RAILS_ENV=production
-
-# Precompile Rails assets
 bundle exec rails assets:precompile RAILS_ENV=production
 
-# Start the Rails application service
+# Restart the service
 if command -v systemctl >/dev/null 2>&1; then
-  sudo systemctl start ContactsManager
+  sudo systemctl start contacts_manager
 else
-  echo "systemctl not available. Please start ContactsManager manually."
+  echo "systemctl not available; please start the service manually."
 fi
 
 echo "Deployment complete!"
