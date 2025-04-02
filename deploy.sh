@@ -1,16 +1,22 @@
 #!/usr/bin/env bash
 
-# Debug: Show the HOME variable
-echo "HOME is set to: $HOME"
+# Debug: Show the HOME variable before forcing it
+echo "Original HOME is set to: $HOME"
 
-# Optionally force the correct HOME (if you know it should be /home/ubuntu)
+# Force HOME to /home/ubuntu
 export HOME=/home/ubuntu
+echo "Forced HOME is set to: $HOME"
 
 # Update package lists and install prerequisites
 sudo apt update && sudo apt install -y curl build-essential
 
 # Source RVM to ensure Ruby and gem commands are available
-source "$HOME/.rvm/scripts/rvm" || { echo "RVM not found in $HOME/.rvm/scripts/rvm"; exit 1; }
+if [ -s "$HOME/.rvm/scripts/rvm" ]; then
+  source "$HOME/.rvm/scripts/rvm"
+else
+  echo "Error: RVM not found in $HOME/.rvm/scripts/rvm"
+  exit 1
+fi
 
 # Verify Bundler is installed, if not, install it
 if ! command -v bundle >/dev/null 2>&1; then
@@ -47,4 +53,3 @@ else
 fi
 
 echo "Deployment complete!"
-
