@@ -8,6 +8,17 @@ class ContactsController < ApplicationController
     @selected_group_id = params[:group_id]
     @search_term = params[:search]
     @contacts = current_user.contacts
+
+    # Filter contacts by selected group
+    if @selected_group_id.present?
+      @contacts = @contacts.joins(:groups).where(groups: { id: @selected_group_id })
+    end
+
+    # Search contacts by name, email, or phone
+    if @search_term.present?
+      term = "%#{@search_term}%"
+      @contacts = @contacts.where("contacts.name LIKE ? OR contacts.email LIKE ? OR contacts.phone LIKE ?", term, term, term)
+    end
    
     
   end
@@ -28,9 +39,10 @@ class ContactsController < ApplicationController
   # POST /contacts or /contacts.json
   def create
     @contact = current_user.contacts.build(contact_params)
-
+  
     if @contact.save
-      # Changed to redirect to the newly created contact's show page
+      group_ids = params.dig(:contact, :group_ids)&.reject(&:blank?) || []
+      @contact.group_ids = group_ids
       redirect_to @contact, notice: "Contact was successfully created."
     else
       render :new, status: :unprocessable_entity
@@ -40,9 +52,11 @@ class ContactsController < ApplicationController
   # PATCH/PUT /contacts/1 or /contacts/1.json
   def update
     if @contact.update(contact_params)
+      group_ids = params[:contact][:group_ids].reject(&:blank?)
+      @contact.groups = current_user.groups.where(id: group_ids)
       redirect_to @contact, notice: 'Contact was successfully updated.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
