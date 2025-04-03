@@ -1,14 +1,27 @@
 version: 2.1
 
 workflows:
-  build_test:
+  version: 2
+  build:
     jobs:
-      - build_and_test
+      - build_and_test:
+          filters:
+            branches:
+              only:
+                - main
+      - deploy:
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - build_and_test
 
 jobs:
   build_and_test:
+    working_directory: ~/ContactsManager
     docker:
-      # Primary container: Ruby + browsers for system tests
+      # Primary container: Ruby (with browsers for system tests)
       - image: cimg/ruby:3.1-browsers
         environment:
           RAILS_ENV: test
@@ -32,10 +45,19 @@ jobs:
       - run:
           name: Database Setup
           command: |
-            # Create and migrate the test database
             bundle exec rails db:create
             bundle exec rails db:migrate
 
       - run:
           name: Run Tests
           command: bundle exec rails test
+
+  deploy:
+    working_directory: ~/ContactsManager
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: Deploy Application
+          command: ssh -o StrictHostKeyChecking=no $EC2_Connect@$EC2_Public_DNS rm -rf ContactsManager/; git clone https://github.com/MuhannedG/ContactsManager.git; source ContactsManager/deploy.sh
